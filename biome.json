@@ -7,7 +7,14 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": []
+    "ignore": [
+      "dist/**",
+      "node_modules/**",
+      "public/**",
+      "**/*.d.ts",
+      "**/*.json",
+      "**/*.jsonc"
+    ]
 	},
 	"formatter": {
 		"enabled": true,
@@ -26,5 +33,18 @@
 		"formatter": {
 			"quoteStyle": "double"
 		}
-	}
+	},
+	"overrides": [
+    {
+      "include": ["*.astro"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useConst": "off",
+            "useImportType": "off"
+          }
+        }
+      }
+    }
+  ]
 }
