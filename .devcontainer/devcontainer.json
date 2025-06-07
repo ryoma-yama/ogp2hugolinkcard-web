@@ -1,0 +1,21 @@
+{
+  "name": "OGP2HugoLinkCardWeb (Astro + Cloudflare)",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    }
+  },
+  "postCreateCommand": "pnpm install --frozen-lockfile",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "streetsidesoftware.code-spell-checker",
+        "bierner.markdown-mermaid",
+        "yzhang.markdown-all-in-one",
+        "biomejs.biome"
+      ]
+    }
+  }
+}
