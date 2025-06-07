@@ -14,7 +14,8 @@
         "streetsidesoftware.code-spell-checker",
         "bierner.markdown-mermaid",
         "yzhang.markdown-all-in-one",
-        "biomejs.biome"
+        "biomejs.biome",
+        "astro-build.astro-vscode"
       ]
     }
   }
