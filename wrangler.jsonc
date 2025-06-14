@@ -5,6 +5,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "ogp2hugolinkcard-web",
+	"main": "worker/index.ts",
 	"compatibility_date": "2025-06-07",
 	"compatibility_flags": [
 		"nodejs_compat",
