@@ -1,16 +1,180 @@
----
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OGP Link Card Generator</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        background-color: #121212;
+        color: #f0f0f0;
+        padding: 2rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+      }
+      .summary {
+        color: #ccc;
+        margin-bottom: 2rem;
+      }
+      form {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+      }
+      input[type="url"] {
+        flex-grow: 1;
+        padding: 0.75rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+      button {
+        padding: 0.75rem 1.25rem;
+        background-color: #22c55e;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      .preview {
+        display: flex;
+        background: #1f1f1f;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+      }
+      .preview img {
+        width: 150px;
+        object-fit: cover;
+      }
+      .preview-content {
+        padding: 1rem;
+      }
+      .preview-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+      }
+      .preview-desc {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        color: #aaa;
+      }
+      .preview-url {
+        font-size: 0.8rem;
+        color: #60a5fa;
+      }
+      .code-wrapper {
+        position: relative;
+        margin-bottom: 2rem;
+      }
+      .code-block {
+        background: #2e2e2e;
+        padding: 1rem;
+        border-radius: 4px;
+        font-family: monospace;
+        white-space: pre-wrap;
+      }
+      .copy-button {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: #3b3b3b;
+        color: #f0f0f0;
+        border: none;
+        border-radius: 4px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>OGP Link Card Generator</h1>
+    <div class="summary">Generate Hugo-compatible link card shortcodes from any URL.</div>
 
----
+    <form id="ogp-form">
+      <input type="url" id="url-input" placeholder="https://..." required />
+      <button type="submit">Create Link Card</button>
+    </form>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+    <div id="preview" class="preview" style="display:none">
+      <img id="preview-img" src="" alt="preview" />
+      <div class="preview-content">
+        <div id="preview-title" class="preview-title"></div>
+        <div id="preview-desc" class="preview-desc"></div>
+        <div id="preview-url" class="preview-url"></div>
+      </div>
+    </div>
+
+    <div class="code-wrapper">
+      <button id="copy-button" class="copy-button">Copy</button>
+      <div id="code" class="code-block">The Link Preview Code will be generated here.</div>
+    </div>
+
+    <script>
+      const formEl = document.getElementById("ogp-form");
+      const inputEl = document.getElementById("url-input");
+      const previewEl = document.getElementById("preview");
+      const codeEl = document.getElementById("code");
+      const imgEl = document.getElementById("preview-img");
+      const titleEl = document.getElementById("preview-title");
+      const descEl = document.getElementById("preview-desc");
+      const urlTextEl = document.getElementById("preview-url");
+      const copyButtonEl = document.getElementById("copy-button");
+
+      if (
+        formEl instanceof HTMLFormElement &&
+        inputEl instanceof HTMLInputElement &&
+        previewEl instanceof HTMLElement &&
+        codeEl instanceof HTMLElement &&
+        imgEl instanceof HTMLImageElement &&
+        titleEl instanceof HTMLElement &&
+        descEl instanceof HTMLElement &&
+        urlTextEl instanceof HTMLElement &&
+        copyButtonEl instanceof HTMLButtonElement
+      ) {
+        formEl.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          codeEl.textContent = "Fetching...";
+          previewEl.style.display = "none";
+          try {
+            const res = await fetch(`/api/ogp?url=${encodeURIComponent(inputEl.value)}`);
+            const text = await res.text();
+            codeEl.textContent = text;
+
+            const titleMatch = text.match(/title=\"([^\"]+)\"/);
+            const descMatch = text.match(/description=\"([^\"]+)\"/);
+            const imageMatch = text.match(/image=\"([^\"]+)\"/);
+
+            titleEl.textContent = titleMatch?.[1] || "";
+            descEl.textContent = descMatch?.[1] || "";
+            imgEl.src = imageMatch?.[1] || "";
+            urlTextEl.textContent = inputEl.value;
+
+            previewEl.style.display = "flex";
+          } catch (err) {
+            codeEl.textContent = "Error: " + (err instanceof Error ? err.message : String(err));
+          }
+        });
+
+        copyButtonEl.addEventListener("click", () => {
+          const text = codeEl.textContent || "";
+          navigator.clipboard.writeText(text).then(() => {
+            copyButtonEl.textContent = "Copied!";
+            setTimeout(() => (copyButtonEl.textContent = "Copy"), 1500);
+          });
+        });
+      }
+    </script>
+  </body>
 </html>
