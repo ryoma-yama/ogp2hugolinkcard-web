@@ -1,124 +1,34 @@
+---
+import "../styles/global.css";
+---
 <!DOCTYPE html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OGP Link Card Generator</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: sans-serif;
-        background-color: #121212;
-        color: #f0f0f0;
-        padding: 2rem;
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      h1 {
-        font-size: 2rem;
-        margin-bottom: 0.25rem;
-      }
-      .summary {
-        color: #ccc;
-        margin-bottom: 2rem;
-      }
-      form {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 2rem;
-      }
-      input[type="url"] {
-        flex-grow: 1;
-        padding: 0.75rem;
-        border: none;
-        border-radius: 4px;
-        font-size: 1rem;
-      }
-      button {
-        padding: 0.75rem 1.25rem;
-        background-color: #22c55e;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        font-weight: bold;
-        font-size: 1rem;
-        cursor: pointer;
-      }
-      .preview {
-        display: flex;
-        background: #1f1f1f;
-        border-radius: 8px;
-        overflow: hidden;
-        margin-bottom: 2rem;
-      }
-      .preview img {
-        width: 150px;
-        object-fit: cover;
-      }
-      .preview-content {
-        padding: 1rem;
-      }
-      .preview-title {
-        font-size: 1.2rem;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-      }
-      .preview-desc {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-        color: #aaa;
-      }
-      .preview-url {
-        font-size: 0.8rem;
-        color: #60a5fa;
-      }
-      .code-wrapper {
-        position: relative;
-        margin-bottom: 2rem;
-      }
-      .code-block {
-        background: #2e2e2e;
-        padding: 1rem;
-        border-radius: 4px;
-        font-family: monospace;
-        white-space: pre-wrap;
-      }
-      .copy-button {
-        position: absolute;
-        top: 0.5rem;
-        right: 0.5rem;
-        background: #3b3b3b;
-        color: #f0f0f0;
-        border: none;
-        border-radius: 4px;
-        padding: 0.3rem 0.6rem;
-        font-size: 0.8rem;
-        cursor: pointer;
-      }
-    </style>
   </head>
-  <body>
-    <h1>OGP Link Card Generator</h1>
-    <div class="summary">Generate Hugo-compatible link card shortcodes from any URL.</div>
+  <body class="bg-zinc-900 text-zinc-100 font-sans p-8 max-w-[700px] mx-auto">
+    <h1 class="text-2xl mb-1">OGP Link Card Generator</h1>
+    <div class="text-zinc-400 mb-8 text-sm">Generate Hugo-compatible link card shortcodes from any URL.</div>
 
-    <form id="ogp-form">
-      <input type="url" id="url-input" placeholder="https://..." required />
-      <button type="submit">Create Link Card</button>
+    <form id="ogp-form" class="flex gap-2 mb-8">
+      <input type="url" id="url-input" placeholder="https://..." required class="flex-grow px-3 py-2 text-base rounded border border-zinc-700 bg-zinc-800" />
+      <button type="submit" class="px-4 py-2 text-white bg-green-500 rounded font-semibold text-base">Create Link Card</button>
     </form>
 
-    <div id="preview" class="preview" style="display:none">
-      <img id="preview-img" src="" alt="preview" />
-      <div class="preview-content">
-        <div id="preview-title" class="preview-title"></div>
-        <div id="preview-desc" class="preview-desc"></div>
-        <div id="preview-url" class="preview-url"></div>
+    <div id="preview" class="hidden bg-zinc-800 rounded-lg overflow-hidden mb-8">
+      <img id="preview-img" src="" alt="preview" class="w-[150px] object-cover" />
+      <div class="p-4">
+        <div id="preview-title" class="text-lg font-semibold mb-2"></div>
+        <div id="preview-desc" class="text-sm text-zinc-400 mb-2"></div>
+        <div id="preview-url" class="text-xs text-blue-400"></div>
       </div>
     </div>
 
-    <div class="code-wrapper">
-      <button id="copy-button" class="copy-button">Copy</button>
-      <div id="code" class="code-block">The Link Preview Code will be generated here.</div>
+    <div class="relative mb-8">
+      <button id="copy-button" class="absolute top-2 right-2 bg-zinc-700 text-zinc-100 rounded px-2 py-1 text-xs">Copy</button>
+      <div id="code" class="bg-zinc-800 p-4 rounded font-mono whitespace-pre-wrap">The Link Preview Code will be generated here.</div>
     </div>
 
     <script>
@@ -146,22 +56,25 @@
         formEl.addEventListener("submit", async (e) => {
           e.preventDefault();
           codeEl.textContent = "Fetching...";
-          previewEl.style.display = "none";
+          previewEl.classList.add("hidden");
+          previewEl.classList.remove("flex");
+
           try {
             const res = await fetch(`/api/ogp?url=${encodeURIComponent(inputEl.value)}`);
             const text = await res.text();
             codeEl.textContent = text;
 
-            const titleMatch = text.match(/title=\"([^\"]+)\"/);
-            const descMatch = text.match(/description=\"([^\"]+)\"/);
-            const imageMatch = text.match(/image=\"([^\"]+)\"/);
+            const titleMatch = text.match(/title="([^"]+)"/);
+            const descMatch = text.match(/description="([^"]+)"/);
+            const imageMatch = text.match(/image="([^"]+)"/);
 
             titleEl.textContent = titleMatch?.[1] || "";
             descEl.textContent = descMatch?.[1] || "";
             imgEl.src = imageMatch?.[1] || "";
             urlTextEl.textContent = inputEl.value;
 
-            previewEl.style.display = "flex";
+            previewEl.classList.remove("hidden");
+            previewEl.classList.add("flex");
           } catch (err) {
             codeEl.textContent = "Error: " + (err instanceof Error ? err.message : String(err));
           }
