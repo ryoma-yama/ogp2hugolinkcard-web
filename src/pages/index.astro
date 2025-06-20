@@ -1,24 +1,49 @@
 ---
 import "../styles/global.css";
 ---
-<!DOCTYPE html>
-<html lang="ja">
+
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OGP Link Card Generator</title>
+    <title>ogp2hugolinkcard-web</title>
   </head>
   <body class="bg-zinc-900 text-zinc-100 font-sans p-8 max-w-[700px] mx-auto">
-    <h1 class="text-2xl mb-1">OGP Link Card Generator</h1>
-    <div class="text-zinc-400 mb-8 text-sm">Generate Hugo-compatible link card shortcodes from any URL.</div>
+    <h1 class="text-2xl mb-1">ogp2hugolinkcard-web</h1>
+    <p class="text-zinc-400 mb-8 text-sm">
+      Generate a Hugo <code>linkCard</code> shortcode from any URL.<br />
+      Web version of the <a
+        href="https://github.com/ryoma-yama/ogp2hugolinkcard"
+        class="text-blue-400 underline">ogp2hugolinkcard</a
+      > CLI.
+    </p>
 
     <form id="ogp-form" class="flex gap-2 mb-8">
-      <input type="url" id="url-input" placeholder="https://..." required class="flex-grow px-3 py-2 text-base rounded border border-zinc-700 bg-zinc-800" />
-      <button type="submit" class="px-4 py-2 text-white bg-green-500 rounded font-semibold text-base">Create Link Card</button>
+      <input
+        type="url"
+        id="url-input"
+        placeholder="https://..."
+        required
+        class="flex-grow px-3 py-2 text-base rounded border border-zinc-700 bg-zinc-800"
+      />
+      <button
+        type="submit"
+        class="cursor-pointer px-4 py-2 text-white bg-green-500 rounded font-semibold text-base"
+        >Create Link Card</button
+      >
     </form>
 
-    <div id="preview" class="hidden bg-zinc-800 rounded-lg overflow-hidden mb-8">
-      <img id="preview-img" src="" alt="preview" class="w-[150px] object-cover" />
+    <div
+      id="preview"
+      class="hidden bg-zinc-800 rounded-lg overflow-hidden mb-8"
+    >
+      <img
+        id="preview-img"
+        src=""
+        alt="Link preview image"
+        class="w-[150px] object-cover"
+      />
       <div class="p-4">
         <div id="preview-title" class="text-lg font-semibold mb-2"></div>
         <div id="preview-desc" class="text-sm text-zinc-400 mb-2"></div>
@@ -27,8 +52,18 @@ import "../styles/global.css";
     </div>
 
     <div class="relative mb-8">
-      <button id="copy-button" class="absolute top-2 right-2 bg-zinc-700 text-zinc-100 rounded px-2 py-1 text-xs">Copy</button>
-      <div id="code" class="bg-zinc-800 p-4 rounded font-mono whitespace-pre-wrap">The Link Preview Code will be generated here.</div>
+      <button
+        id="copy-button"
+        aria-label="Copy shortcode to clipboard"
+        class="absolute top-2 right-2 bg-zinc-700 text-zinc-100 rounded px-2 py-1 text-xs"
+        >Copy</button
+      >
+      <div
+        id="code"
+        class="bg-zinc-800 p-4 rounded font-mono whitespace-pre-wrap"
+      >
+        The Hugo shortcode will appear here.
+      </div>
     </div>
 
     <script>
@@ -56,11 +91,14 @@ import "../styles/global.css";
         formEl.addEventListener("submit", async (e) => {
           e.preventDefault();
           codeEl.textContent = "Fetching...";
-          previewEl.classList.add("hidden");
+          previewEl.classList.toggle("hidden", true);
           previewEl.classList.remove("flex");
 
           try {
-            const res = await fetch(`/api/ogp?url=${encodeURIComponent(inputEl.value)}`);
+            const res = await fetch(
+              `/api/ogp?url=${encodeURIComponent(inputEl.value)}`,
+            );
+            if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
             const text = await res.text();
             codeEl.textContent = text;
 
@@ -73,10 +111,11 @@ import "../styles/global.css";
             imgEl.src = imageMatch?.[1] || "";
             urlTextEl.textContent = inputEl.value;
 
-            previewEl.classList.remove("hidden");
+            previewEl.classList.toggle("hidden", false);
             previewEl.classList.add("flex");
           } catch (err) {
-            codeEl.textContent = "Error: " + (err instanceof Error ? err.message : String(err));
+            codeEl.textContent =
+              "Error: " + (err instanceof Error ? err.message : String(err));
           }
         });
 
