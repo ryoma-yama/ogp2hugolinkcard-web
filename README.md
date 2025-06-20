@@ -1,47 +1,82 @@
-# Astro Starter Kit: Minimal
+# ogp2hugolinkcard-web
 
-```sh
-pnpm create astro@latest -- --template minimal
+**ogp2hugolinkcard-web** is the easiest way to generate Hugo link card shortcodes from any URL—right in your browser, with no setup required.
+
+- 👉 **Try it instantly:** [https://ogp2hugolinkcard-web.ryomayama.com/](https://ogp2hugolinkcard-web.ryomayama.com/)
+
+## What is this?
+
+This is the web version of [ogp2hugolinkcard](https://github.com/ryoma-yama/ogp2hugolinkcard), a CLI tool for developers who want to self-host or automate the process.
+
+- **No installation or deployment needed**—just open the hosted site and start generating link cards.
+- **Want to self-host or customize?** You can deploy this project yourself to Cloudflare or any other platform.
+- Prefer the CLI? See: [ogp2hugolinkcard](https://github.com/ryoma-yama/ogp2hugolinkcard)
+
+## Getting Started
+
+### 1. Install dependencies
+
+```bash
+pnpm install
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+### 2. Running the Development Server
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- To preview UI changes with hot reload (recommended for UI/component development):
 
-## 🚀 Project Structure
+  ```bash
+  pnpm dev
+  ```
+  - Starts the Astro dev server at `http://localhost:4321`.
+  - Only the frontend is available; API requests to the Worker will not work locally.
 
-Inside of your Astro project, you'll see the following folders and files:
+- To test the full stack (Astro + Cloudflare Worker API) locally:
 
-```text
+  ```bash
+  pnpm preview
+  ```
+  - Builds the site and starts both the static site and the Worker API using Wrangler.
+  - Use this when you need to test API integration.
+
+### 3. Build for Production
+
+```bash
+pnpm build
+```
+- Outputs the production build to the `./dist/` directory.
+
+### 4. Deploy
+
+```bash
+pnpm deploy:app
+```
+- Builds and deploys the app and Worker to Cloudflare.
+
+## Project Structure
+
+```
 /
-├── public/
+├── public/         # Static assets
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── pages/      # Astro pages
+│   └── styles/     # Global CSS
+├── worker/         # Cloudflare Worker code
+├── package.json
+└── astro.config.mjs
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Coding Standards
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- Lint: `pnpm lint` (if configured)
+- Format: `pnpm format` (uses Biome)
+- TypeScript recommended
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Notes
 
-## 🧞 Commands
+- Use `pnpm dev` for rapid UI development (hot reload, no API).
+- Use `pnpm preview` to test with the Worker API locally.
+- See [Astro documentation](https://docs.astro.build) for more details.
 
-All commands are run from the root of the project, from a terminal:
+## License
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+This project is licensed under the [Apache License 2.0](./LICENSE).
