@@ -41,18 +41,18 @@ import "../styles/global.css";
       href=""
       target="_blank"
       rel="noopener noreferrer"
-      class="hidden bg-zinc-800 rounded-lg overflow-hidden mb-8 hover:bg-zinc-700 transition-colors duration-200 no-underline text-inherit"
+      class="hidden bg-zinc-800 rounded-lg mb-8 hover:bg-zinc-700 transition-colors duration-200 no-underline text-inherit"
     >
       <img
         id="preview-img"
         src=""
         alt="Link preview image"
-        class="w-[150px] object-cover"
+        class="w-[150px] h-auto object-cover rounded-l-lg"
       />
-      <div class="p-4">
-        <div id="preview-title" class="text-lg font-semibold mb-2"></div>
-        <div id="preview-desc" class="text-sm text-zinc-400 mb-2"></div>
-        <div id="preview-url" class="text-xs text-blue-400"></div>
+      <div class="p-4 flex-1 min-w-0">
+        <div id="preview-title" class="text-lg font-semibold mb-2 line-clamp-1"></div>
+        <div id="preview-desc" class="text-sm text-zinc-400 mb-2 line-clamp-2"></div>
+        <div id="preview-url" class="text-xs text-blue-400 line-clamp-1"></div>
       </div>
     </a>
 
