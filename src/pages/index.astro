@@ -36,9 +36,12 @@ import "../styles/global.css";
       >
     </form>
 
-    <div
+    <a
       id="preview"
-      class="hidden bg-zinc-800 rounded-lg overflow-hidden mb-8"
+      href=""
+      target="_blank"
+      rel="noopener noreferrer"
+      class="hidden bg-zinc-800 rounded-lg overflow-hidden mb-8 hover:bg-zinc-700 transition-colors duration-200 no-underline text-inherit"
     >
       <img
         id="preview-img"
@@ -51,7 +54,7 @@ import "../styles/global.css";
         <div id="preview-desc" class="text-sm text-zinc-400 mb-2"></div>
         <div id="preview-url" class="text-xs text-blue-400"></div>
       </div>
-    </div>
+    </a>
 
     <div class="relative mb-8">
       <button
@@ -82,7 +85,7 @@ import "../styles/global.css";
       if (
         formEl instanceof HTMLFormElement &&
         inputEl instanceof HTMLInputElement &&
-        previewEl instanceof HTMLElement &&
+        previewEl instanceof HTMLAnchorElement &&
         codeEl instanceof HTMLElement &&
         imgEl instanceof HTMLImageElement &&
         titleEl instanceof HTMLElement &&
@@ -112,6 +115,7 @@ import "../styles/global.css";
             descEl.textContent = descMatch?.[1] || "";
             imgEl.src = imageMatch?.[1] || "";
             urlTextEl.textContent = inputEl.value;
+            previewEl.href = inputEl.value;
 
             previewEl.classList.toggle("hidden", false);
             previewEl.classList.add("flex");
